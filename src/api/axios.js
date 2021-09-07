@@ -1,6 +1,6 @@
 import axios from "axios"
 
 const axiosInstance = axios.create({
-  baseURL: "http://192.168.18.3:5000",
+  baseURL: "https://backend--ofstream-api.herokuapp.com/",
 })
 export default axiosInstance
