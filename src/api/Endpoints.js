@@ -1,4 +1,4 @@
-export const baseUrl = "https://backend--ofstream-api.herokuapp.com/"
+export const baseUrl = "https://backend--ofstream-api.herokuapp.com"
 ///////////USER/ARTISTS/////////////////
 export const ADMINCREATEUSER = `${baseUrl}/api/v1/users/auth/adminCreateUser`
 export const GETARTISTS = `${baseUrl}/api/v1/users/auth/getArtists`
