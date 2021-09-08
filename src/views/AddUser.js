@@ -1,74 +1,73 @@
-import React, { useState } from "react"
-import { Button, Card, Form, Container, Row, Col } from "react-bootstrap"
-import ProfileAvatar from "../assets/img/default-avatar.png"
-import axiosInstance from "api/axios"
-import { ADMINCREATEUSER, GETARTISTS } from "api/Endpoints"
-import { useHistory } from "react-router-dom"
+import React, { useState, useEffect } from 'react'
+import {
+  Button,
+  Card,
+  Form,
+  Container,
+  Row,
+  Col
+} from 'react-bootstrap'
+import ProfileAvatar from '../assets/img/default-avatar.png'
+import axiosInstance from 'api/axios'
+import { ADMINCREATEUSER } from 'api/Endpoints'
+import {
+  storage,
+  ref,
+  uploadBytes,
+  getDownloadURL
+} from '../api/firebase'
 
 function AddUser() {
   const history = useHistory()
   const [selectedImage, setSelectedImage] = useState(null)
+  const [imageName, setImageName] = useState()
   const [artistName, setArtistName] = useState()
   const [fullName, setFullName] = useState()
   const [userName, setUserName] = useState()
   const [email, setEmail] = useState()
   const [password, setPassword] = useState()
   const [pro, setPro] = useState()
+  const onSavePress = async () => {
+    const storageRef = ref(storage, `${imageName}`)
+    console.log('storageRef', storageRef)
+    uploadBytes(storageRef, selectedImage)
+      .then(snapshot => {
+        getDownloadURL(ref(storage, `${imageName}`)).then(url => {
+          console.log('url ', url)
+          const newData = {
+            profileImage: url,
+            fullName,
+            artistName,
+            userName,
+            email,
+            password,
+            pro
+          }
 
-  const onSavePress = () => {
-    if (
-      selectedImage === null ||
-      fullName === "" ||
-      artistName === "" ||
-      userName === "" ||
-      email === "" ||
-      password === "" ||
-      pro === ""
-    ) {
-      alert("Fields Cannot be empty")
-      return
-    }
-    const newData = new FormData()
-    newData.append("profileImage", {
-      uri: selectedImage,
-      name: "image.jpg",
-      type: "image/jpeg",
-    })
-    newData.append("fullName", fullName)
-    newData.append("artistName", artistName)
-    newData.append("userName", userName)
-    newData.append("email", email)
-    newData.append("password", password)
-    newData.append("PRO", pro)
-
-    const url = ADMINCREATEUSER
-    axiosInstance
-      .post(url, newData)
-      .then((res) => {
-        console.log("res.data.data", res.data)
-        history.push("/dashboard")
-        alert("User added Successfully")
+          axiosInstance.post(ADMINCREATEUSER, newData).then(res => {
+            console.log('res.data.data', res.data)
+          })
+        })
       })
-      .catch((error) => alert(error))
+      .catch(err => console.log('err', err))
   }
-
   return (
     <>
       <Container fluid>
         <Card>
           <Card.Header>
-            <Card.Title as="h4">Add User</Card.Title>
+            <Card.Title as='h4'>Add User</Card.Title>
           </Card.Header>
           <Card.Body>
             <Form>
-              <Row className="d-flex">
+              <Row className='d-flex'>
                 {selectedImage ? (
                   <div>
                     <img
-                      alt="not fount"
-                      width={"150px"}
-                      height={"150px"}
-                      style={{ borderRadius: "150px" }}
+                      alt='not fount'
+                      width={'150px'}
+                      height={'150px'}
+                      style={{ borderRadius: '150px' }}
                       src={URL.createObjectURL(selectedImage)}
                     />
                     <br />
@@ -79,104 +78,120 @@ function AddUser() {
                 ) : (
                   <div>
                     <img
-                      alt="Profile Image"
-                      width={"150px"}
-                      height={"150px"}
+                      alt='Profile Image'
+                      width={'150px'}
+                      height={'150px'}
                       src={ProfileAvatar}
                     />
                     <br />
                     <input
-                      type="file"
-                      name="myImage"
-                      onChange={(event) => {
+                      type='file'
+                      name='myImage'
+                      onChange={event => {
                         console.log(event.target.files[0])
                         setSelectedImage(event.target.files[0])
+                        setImageName(
+                          event.target.files[0].lastModified
+                        )
                       }}
                     />
                   </div>
                 )}
               </Row>
               <Row>
-                <Col className="pr-1" md="5">
+                <Col className='pr-1' md='5'>
                   <Form.Group>
                     <label>Full Name</label>
                     <Form.Control
-                      type="text"
-                      placeholder="Full Name"
+                      type='text'
+                      placeholder='Full Name'
                       value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
+                      onChange={e => setFullName(e.target.value)}
                     ></Form.Control>
                   </Form.Group>
                 </Col>
-                <Col className="px-1" md="3">
+                <Col className='px-1' md='3'>
                   <Form.Group>
                     <label>Artist Name</label>
                     <Form.Control
-                      placeholder="Artist Name"
-                      type="text"
+                      placeholder='Artist Name'
+                      type='text'
                       value={artistName}
-                      onChange={(e) => setArtistName(e.target.value)}
+                      onChange={e => setArtistName(e.target.value)}
                     ></Form.Control>
                   </Form.Group>
                 </Col>
-                <Col className="pl-1" md="4">
+                <Col className='pl-1' md='4'>
                   <Form.Group>
                     <label>User Name</label>
                     <Form.Control
-                      placeholder="User Name"
-                      type="text"
+                      placeholder='User Name'
+                      type='text'
                       value={userName}
-                      onChange={(e) => setUserName(e.target.value)}
+                      onChange={e => setUserName(e.target.value)}
                     ></Form.Control>
                   </Form.Group>
                 </Col>
               </Row>
               <Row>
-                <Col className="pr-1" md="6">
+                <Col className='pr-1' md='6'>
                   <Form.Group>
                     <label>Email</label>
                     <Form.Control
-                      placeholder="Email"
-                      type="email"
+                      placeholder='Email'
+                      type='email'
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={e => setEmail(e.target.value)}
                     ></Form.Control>
                   </Form.Group>
                 </Col>
-                <Col className="pl-1" md="6">
+                <Col className='pl-1' md='6'>
                   <Form.Group>
                     <label>Password</label>
                     <Form.Control
-                      placeholder="Password"
-                      type="text"
+                      placeholder='Password'
+                      type='text'
                       value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                      onChange={e => setPassword(e.target.value)}
                     ></Form.Control>
                   </Form.Group>
                 </Col>
               </Row>
               <Row>
-                <Col md="6">
+                <Col md='6'>
                   <Form.Group>
                     <label>PRO</label>
                     <Form.Control
-                      placeholder="PRO"
-                      type="text"
+                      placeholder='PRO'
+                      type='text'
                       value={pro}
-                      onChange={(e) => setPro(e.target.value)}
+                      onChange={e => setPro(e.target.value)}
                     ></Form.Control>
                   </Form.Group>
                 </Col>
               </Row>
-              <Button
-                className="btn-fill pull-right"
-                variant="info"
-                onClick={() => onSavePress()}
+              {/* <Button
+                className='btn-fill pull-right'
+                type='submit'
+                variant='info'
+                onClick={() => {
+                  onSavePress()
+                }}
               >
                 Add New User
-              </Button>
-              <div className="clearfix"></div>
+              </Button> */}
+              {/* <div className='clearfix'></div> */}
             </Form>
+            <Button
+              className='btn-fill pull-right'
+              type='submit'
+              variant='info'
+              onClick={() => {
+                onSavePress()
+              }}
+            >
+              Add New User
+            </Button>
           </Card.Body>
         </Card>
       </Container>
