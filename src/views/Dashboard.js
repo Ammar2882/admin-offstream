@@ -24,7 +24,7 @@ function Dashboard() {
                 <Row>
                   <Col xs="5">
                     <div className="icon-big text-center icon-warning">
-                      <i className="nc-icon nc-credit-card text-warning"></i>
+                      <i className="nc-icon nc-single-copy-04 text-primary"></i>
                     </div>
                   </Col>
                   <Col xs="7">
@@ -84,7 +84,7 @@ function Dashboard() {
                 <Row>
                   <Col xs="5">
                     <div className="icon-big text-center icon-warning">
-                      <i className="nc-icon nc-note-03 text-danger"></i>
+                      <i className="nc-icon nc-credit-card text-warning"></i>
                     </div>
                   </Col>
                   <Col xs="7">
@@ -114,12 +114,12 @@ function Dashboard() {
                 <Row>
                   <Col xs="5">
                     <div className="icon-big text-center icon-warning">
-                      <i className="nc-icon nc-single-copy-04 text-primary"></i>
+                      <i className="nc-icon nc-note-03 text-danger"></i>
                     </div>
                   </Col>
                   <Col xs="7">
                     <div className="numbers">
-                      <p className="card-category">Projects</p>
+                      <p className="card-category">Songs</p>
                       <Card.Title as="h4">45</Card.Title>
                     </div>
                   </Col>
@@ -156,7 +156,7 @@ function Dashboard() {
                       <th className="border-0">Artist Name</th>
                       <th className="border-0">Add Placement</th>
                       <th className="border-0">Add Payout</th>
-                      <th className="border-0">Add Project</th>
+                      <th className="border-0">Add Song</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -176,7 +176,7 @@ function Dashboard() {
                               cursor: "pointer",
                               fontWeight: "bold",
                             }}
-                            className="nc-icon nc-credit-card text-warning"
+                            className="nc-icon nc-single-copy-04 text-primary"
                           ></i>
                         </td>
                         <td>
@@ -189,7 +189,7 @@ function Dashboard() {
                               cursor: "pointer",
                               fontWeight: "bold",
                             }}
-                            className="nc-icon nc-note-03 text-danger"
+                            className="nc-icon nc-credit-card text-warning"
                           ></i>
                         </td>
                         <td>
@@ -202,7 +202,7 @@ function Dashboard() {
                               cursor: "pointer",
                               fontWeight: "bold",
                             }}
-                            className="nc-icon nc-single-copy-04 text-primary"
+                            className="nc-icon nc-note-03 text-danger"
                           ></i>
                         </td>
                       </tr>

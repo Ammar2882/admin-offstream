@@ -1,8 +1,8 @@
 import Dashboard from "views/Dashboard"
-import AddPlacement from "views/AddPlacement"
-import AddUser from "views/AddUser"
-import AddProject from "views/AddProject"
-import AddPayout from "views/AddPayout"
+import Placement from "views/placement/Placements"
+import User from "views/user/Users"
+import Project from "views/project/Projects"
+import Payout from "views/payout/Payouts"
 
 const dashboardRoutes = [
   {
@@ -14,30 +14,30 @@ const dashboardRoutes = [
   },
   {
     path: "/placement",
-    name: "Add Placement",
-    icon: "nc-icon nc-credit-card",
-    component: AddPlacement,
+    name: "Placements",
+    icon: "nc-icon nc-single-copy-04",
+    component: Placement,
     layout: "/admin",
   },
   {
     path: "/user",
-    name: "Add User",
+    name: "Users",
     icon: "nc-icon nc-circle-09",
-    component: AddUser,
+    component: User,
     layout: "/admin",
   },
   {
     path: "/payout",
-    name: "Add Payout",
-    icon: "nc-icon nc-note-03",
-    component: AddPayout,
+    name: "Payouts",
+    icon: "nc-icon nc-credit-card",
+    component: Payout,
     layout: "/admin",
   },
   {
-    path: "/project",
-    name: "Add Project",
-    icon: "nc-icon nc-single-copy-04",
-    component: AddProject,
+    path: "/songs",
+    name: "Songs",
+    icon: "nc-icon nc-note-03",
+    component: Project,
     layout: "/admin",
   },
 ]

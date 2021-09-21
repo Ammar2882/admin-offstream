@@ -32,28 +32,14 @@ function Sidebar({ color, image, routes }) {
             if (!prop.redirect)
               return (
                 <li className={activeRoute(prop.layout + prop.path)} key={key}>
-                  {prop.path === "/user" ? (
-                    <>
-                      {console.log(prop.path)}
-                      <NavLink
-                        to="/admin/user"
-                        className="nav-link"
-                        activeClassName="active"
-                      >
-                        <i className={prop.icon} />
-                        <p>{prop.name}</p>
-                      </NavLink>
-                    </>
-                  ) : (
-                    <NavLink
-                      to="/admin/dashboard"
-                      className="nav-link"
-                      activeClassName="active"
-                    >
-                      <i className={prop.icon} />
-                      <p>{prop.name}</p>
-                    </NavLink>
-                  )}
+                  <NavLink
+                    to={prop.layout + prop.path}
+                    className="nav-link"
+                    activeClassName="active"
+                  >
+                    <i className={prop.icon} />
+                    <p>{prop.name}</p>
+                  </NavLink>
                 </li>
               )
             return null
