@@ -18,10 +18,9 @@ export const ADDPROJECT = `${baseUrl}/api/v1/project/`
 export const getUserSongs = (id) => {
   return `${baseUrl}/api/v1/project/${id}`
 }
-//////////PAYOUTS///////
+///////////////PAYOUTS/////////////////
 export const GETALLPAYOUTS = `${baseUrl}/api/v1/payout/`
 export const ADDPAYMENT = `${baseUrl}/api/v1/payout/`
 export const getUserPayouts = (id) => {
   return `${baseUrl}/api/v1/payout/${id}`
 }
-//////////////////////

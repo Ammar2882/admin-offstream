@@ -3,6 +3,7 @@ import { Card, Container, Row, Col, Table } from "react-bootstrap"
 import { useHistory, withRouter } from "react-router-dom"
 import axiosInstance from "api/axios"
 import { GETARTISTS } from "api/Endpoints"
+
 function Dashboard() {
   const history = useHistory()
   const [users, setUsers] = useState([])
@@ -14,6 +15,7 @@ function Dashboard() {
       .then((res) => setUsers(res.data.artistNames))
       .catch((error) => console.log("error ", error))
   }, [])
+
   return (
     <>
       <Container fluid>
