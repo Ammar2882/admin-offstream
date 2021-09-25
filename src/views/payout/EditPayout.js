@@ -1,20 +1,28 @@
-import React, { useState, useEffect } from "react"
-import { useLocation, useHistory } from "react-router-dom"
-import { Button, Card, Form, Container, Row, Col } from "react-bootstrap"
-import Select from "react-select"
-import DatePicker from "react-datepicker"
-import axiosInstance from "api/axios"
-import { ADDPAYMENT, GETARTISTS } from "api/Endpoints"
-import "react-datepicker/dist/react-datepicker.css"
+import React, { useState, useEffect } from 'react'
+import { useLocation, useHistory } from 'react-router-dom'
+import {
+  Button,
+  Card,
+  Form,
+  Container,
+  Row,
+  Col
+} from 'react-bootstrap'
+import Select from 'react-select'
+import DatePicker from 'react-datepicker'
+import axiosInstance from 'api/axios'
+import { ADDPAYMENT, GETARTISTS } from 'api/Endpoints'
+import 'react-datepicker/dist/react-datepicker.css'
+import { allActionPayout } from 'api/Endpoints'
 
 const statusOptions = [
-  { value: "Pending", label: "Pending" },
-  { value: "Received", label: "Received" },
+  { value: 'Pending', label: 'Pending' },
+  { value: 'Received', label: 'Received' }
 ]
 
 const paidOptions = [
-  { value: "true", label: "true" },
-  { value: "false", label: "false" },
+  { value: 'true', label: 'true' },
+  { value: 'false', label: 'false' }
 ]
 
 function EditPayout() {
@@ -33,13 +41,15 @@ function EditPayout() {
   const [datePaid, setDatePaid] = useState(new Date())
   const [options, setOption] = useState([])
 
-  const handlePaidChange = (selectedOption) => setPaid(selectedOption.value)
-  const handleStatusChange = (selectedOption) => setStatus(selectedOption.value)
+  const handlePaidChange = selectedOption =>
+    setPaid(selectedOption.value)
+  const handleStatusChange = selectedOption =>
+    setStatus(selectedOption.value)
 
-  const handleChange = (selectedOption) => {
+  const handleChange = selectedOption => {
     setSelectedArtistNames(null)
     const temp = []
-    selectedOption.map((e) => temp.push(e.value))
+    selectedOption.map(e => temp.push(e.value))
     setSelectedArtistNames(temp)
     setSelectedOption(selectedOption)
   }
@@ -48,34 +58,46 @@ function EditPayout() {
     const url = GETARTISTS
     axiosInstance
       .get(url)
-      .then((res) =>
-        res.data.artistNames.map((e) =>
-          setOption((result) => [
+      .then(res =>
+        res.data.artistNames.map(e =>
+          setOption(result => [
             ...result,
-            { value: e.artistName, label: e.artistName },
+            { value: e.artistName, label: e.artistName }
           ])
         )
       )
-      .catch((error) => console.log(error))
+      .catch(error => console.log(error))
   }, [])
-
+  useEffect(() => {
+    if (state?.id) {
+      const url = allActionPayout(state?.id)
+      axiosInstance
+        .get(url)
+        .then(
+          res => console.log('res', res.data.data)
+          // setProjectName(res.data.data.placements.projectName),
+          // setSongTitle(res.data.data.placements.songTitle)
+        )
+        .catch(error => console.log('error ', error))
+    }
+  }, [state])
   const onSavePress = () => {
     if (
-      projectName === "" ||
-      songTitle === "" ||
-      datePaid === "" ||
-      percentSplits === "" ||
+      projectName === '' ||
+      songTitle === '' ||
+      datePaid === '' ||
+      percentSplits === '' ||
       totalAmount === null ||
       paid === null ||
       amountDue === null ||
-      purpose === "" ||
-      selectedArtistNames === ""
+      purpose === '' ||
+      selectedArtistNames === ''
     ) {
-      alert("Fields Cannot be empty")
+      alert('Fields Cannot be empty')
       return
     }
     if (!state?.id) {
-      alert("Something went Wrong, Please Refresh")
+      alert('Something went Wrong, Please Refresh')
       return
     }
     const newData = {
@@ -88,51 +110,51 @@ function EditPayout() {
       paid,
       amountDue,
       purpose,
-      artistName: selectedArtistNames,
+      artistName: selectedArtistNames
     }
-    const url = ADDPAYMENT
+    const url = allActionPayout(state?.id)
     axiosInstance
-      .post(url, newData)
-      .then((res) => {
-        console.log("res.data.data", res.data)
-        history.push("/dashboard")
-        alert("payout updated successfully")
+      .patch(url, newData)
+      .then(res => {
+        console.log('res.data.data', res.data)
+        history.push('/dashboard')
+        alert('payout updated successfully')
       })
-      .catch((error) => alert(error))
+      .catch(error => alert(error))
   }
   return (
     <>
       <Container fluid>
         <Card>
           <Card.Header>
-            <Card.Title as="h4">Edit Payout</Card.Title>
+            <Card.Title as='h4'>Edit Payout</Card.Title>
           </Card.Header>
           <Card.Body>
             <Form>
               <Row>
-                <Col className="pl-1" md="4">
+                <Col className='pl-1' md='4'>
                   <Form.Group>
                     <label>Project Name</label>
                     <Form.Control
-                      type="text"
-                      placeholder="Project Name"
+                      type='text'
+                      placeholder='Project Name'
                       value={projectName}
-                      onChange={(e) => setProjectName(e.target.value)}
+                      onChange={e => setProjectName(e.target.value)}
                     ></Form.Control>
                   </Form.Group>
                 </Col>
-                <Col className="pl-1" md="4">
+                <Col className='pl-1' md='4'>
                   <Form.Group>
                     <label>Song Title</label>
                     <Form.Control
-                      placeholder="Song Title"
-                      type="text"
+                      placeholder='Song Title'
+                      type='text'
                       value={songTitle}
-                      onChange={(e) => setSongTitle(e.target.value)}
+                      onChange={e => setSongTitle(e.target.value)}
                     ></Form.Control>
                   </Form.Group>
                 </Col>
-                <Col className="pl-1" md="4">
+                <Col className='pl-1' md='4'>
                   <label>Artists</label>
                   <Select
                     isMulti={true}
@@ -143,42 +165,42 @@ function EditPayout() {
                 </Col>
               </Row>
               <Row>
-                <Col className="pl-1" md="4">
+                <Col className='pl-1' md='4'>
                   <Form.Group>
                     <label>Percent Splits</label>
                     <Form.Control
-                      placeholder="Percent Splits"
-                      type="number"
+                      placeholder='Percent Splits'
+                      type='number'
                       value={percentSplits}
-                      onChange={(e) => setPercentSplits(e.target.value)}
+                      onChange={e => setPercentSplits(e.target.value)}
                     ></Form.Control>
                   </Form.Group>
                 </Col>
-                <Col className="pl-1" md="4">
+                <Col className='pl-1' md='4'>
                   <Form.Group>
                     <label>Total Amount</label>
                     <Form.Control
-                      placeholder="Total Amount"
-                      type="number"
+                      placeholder='Total Amount'
+                      type='number'
                       value={totalAmount}
-                      onChange={(e) => setTotalAmount(e.target.value)}
+                      onChange={e => setTotalAmount(e.target.value)}
                     ></Form.Control>
                   </Form.Group>
                 </Col>
-                <Col className="pl-1" md="4">
+                <Col className='pl-1' md='4'>
                   <Form.Group>
                     <label>Amount Due</label>
                     <Form.Control
-                      placeholder="Amount Due"
-                      type="number"
+                      placeholder='Amount Due'
+                      type='number'
                       value={amountDue}
-                      onChange={(e) => setAmoutDue(e.target.value)}
+                      onChange={e => setAmoutDue(e.target.value)}
                     ></Form.Control>
                   </Form.Group>
                 </Col>
               </Row>
               <Row>
-                <Col className="pl-1" md="4">
+                <Col className='pl-1' md='4'>
                   <Form.Group>
                     <label>Status</label>
                     <Select
@@ -188,7 +210,7 @@ function EditPayout() {
                     />
                   </Form.Group>
                 </Col>
-                <Col className="pl-1" md="4">
+                <Col className='pl-1' md='4'>
                   <label>Paid</label>
                   <Select
                     value={paid}
@@ -196,37 +218,37 @@ function EditPayout() {
                     options={paidOptions}
                   />
                 </Col>
-                <Col className="pl-1" md="4">
+                <Col className='pl-1' md='4'>
                   <label>Date Paid</label>
                   <DatePicker
                     selected={datePaid}
-                    onChange={(date) => setDatePaid(date)}
+                    onChange={date => setDatePaid(date)}
                   />
                 </Col>
               </Row>
               <Row>
-                <Col md="12">
+                <Col md='12'>
                   <Form.Group>
                     <label>Purpose</label>
                     <Form.Control
-                      cols="80"
-                      placeholder="Here can be your purpose of placement"
-                      rows="4"
-                      as="textarea"
+                      cols='80'
+                      placeholder='Here can be your purpose of placement'
+                      rows='4'
+                      as='textarea'
                       value={purpose}
-                      onChange={(e) => setPurpose(e.target.value)}
+                      onChange={e => setPurpose(e.target.value)}
                     ></Form.Control>
                   </Form.Group>
                 </Col>
               </Row>
               <Button
-                className="btn-fill pull-right"
-                variant="info"
+                className='btn-fill pull-right'
+                variant='info'
                 onClick={onSavePress}
               >
                 Update Payout
               </Button>
-              <div className="clearfix"></div>
+              <div className='clearfix'></div>
             </Form>
           </Card.Body>
         </Card>
