@@ -39,7 +39,7 @@ function Placements() {
                     {placements.map((item, index) => (
                       <tr
                         onClick={() =>
-                          history.push("/admin/editPlacements", {
+                          history.push("/admin/edit-placement", {
                             id: item._id,
                           })
                         }

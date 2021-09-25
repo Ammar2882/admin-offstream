@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react"
 import { useLocation, Route, Switch } from "react-router-dom"
 import Sidebar from "components/Sidebar/Sidebar"
 import FixedPlugin from "components/FixedPlugin/FixedPlugin.js"
-import routes from "routes.js"
+import routes from "../routes/routes"
 import sidebarImage from "assets/img/sidebar-3.jpg"
 
 function Admin() {
@@ -21,8 +21,6 @@ function Admin() {
             key={key}
           />
         )
-      } else {
-        return null
       }
     })
   }

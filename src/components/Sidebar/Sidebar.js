@@ -1,6 +1,5 @@
 import React from "react"
 import { useLocation, NavLink } from "react-router-dom"
-
 import { Nav } from "react-bootstrap"
 
 function Sidebar({ color, image, routes }) {
@@ -29,7 +28,10 @@ function Sidebar({ color, image, routes }) {
         </div>
         <Nav>
           {routes.map((prop, key) => {
-            if (!prop.redirect)
+            if (!prop.redirect) {
+              if (prop.path.includes("/add") || prop.path.includes("/edit")) {
+                return null
+              }
               return (
                 <li className={activeRoute(prop.layout + prop.path)} key={key}>
                   <NavLink
@@ -42,6 +44,7 @@ function Sidebar({ color, image, routes }) {
                   </NavLink>
                 </li>
               )
+            }
             return null
           })}
         </Nav>

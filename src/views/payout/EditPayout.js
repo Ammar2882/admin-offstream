@@ -17,7 +17,7 @@ const paidOptions = [
   { value: "false", label: "false" },
 ]
 
-function AddPayout() {
+function EditPayout() {
   const history = useHistory()
   const { state } = useLocation()
   const [projectName, setProjectName] = useState()
@@ -56,7 +56,7 @@ function AddPayout() {
           ])
         )
       )
-      .catch((error) => console.log("error ", error))
+      .catch((error) => console.log(error))
   }, [])
 
   const onSavePress = () => {
@@ -96,7 +96,7 @@ function AddPayout() {
       .then((res) => {
         console.log("res.data.data", res.data)
         history.push("/dashboard")
-        alert("payout added successfully")
+        alert("payout updated successfully")
       })
       .catch((error) => alert(error))
   }
@@ -105,7 +105,7 @@ function AddPayout() {
       <Container fluid>
         <Card>
           <Card.Header>
-            <Card.Title as="h4">Add Payout</Card.Title>
+            <Card.Title as="h4">Edit Payout</Card.Title>
           </Card.Header>
           <Card.Body>
             <Form>
@@ -222,9 +222,9 @@ function AddPayout() {
               <Button
                 className="btn-fill pull-right"
                 variant="info"
-                onClick={() => onSavePress()}
+                onClick={onSavePress}
               >
-                Add New Payout
+                Update Payout
               </Button>
               <div className="clearfix"></div>
             </Form>
@@ -235,4 +235,4 @@ function AddPayout() {
   )
 }
 
-export default AddPayout
+export default EditPayout

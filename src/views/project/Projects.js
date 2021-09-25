@@ -13,7 +13,7 @@ function Projects() {
     axiosInstance
       .get(url)
       .then((res) => setProjects(res.data.data.projects))
-      .catch((error) => console.log("error ", error))
+      .catch((error) => console.log(error))
   }, [])
 
   return (
@@ -42,7 +42,7 @@ function Projects() {
                     {projects.map((item, index) => (
                       <tr
                         onClick={() =>
-                          history.push("/admin/editPlacements", {
+                          history.push("/admin/edit-song", {
                             id: item._id,
                           })
                         }

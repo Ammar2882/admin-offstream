@@ -1,6 +1,7 @@
 import axios from "axios"
+import { baseUrl } from "./Endpoints"
 
 const axiosInstance = axios.create({
-  baseURL: "https://backend--ofstream-api.herokuapp.com",
+  baseURL: baseUrl,
 })
 export default axiosInstance

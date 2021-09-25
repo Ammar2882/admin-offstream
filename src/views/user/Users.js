@@ -13,7 +13,7 @@ function Dashboard() {
     axiosInstance
       .get(url)
       .then((res) => setUsers(res.data.artistNames))
-      .catch((error) => console.log("error ", error))
+      .catch((error) => console.log(error))
   }, [])
 
   return (
@@ -40,7 +40,7 @@ function Dashboard() {
                     {users.map((item, index) => (
                       <tr
                         onClick={() =>
-                          history.push("/admin/editUser", { id: item._id })
+                          history.push("/admin/edit-user", { id: item._id })
                         }
                         style={{ cursor: "pointer" }}
                       >

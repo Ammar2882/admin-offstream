@@ -13,7 +13,7 @@ function Payouts() {
     axiosInstance
       .get(url)
       .then((res) => setPayouts(res.data.data.payouts))
-      .catch((error) => console.log("error ", error))
+      .catch((error) => console.log(error))
   }, [])
   return (
     <>
@@ -41,7 +41,7 @@ function Payouts() {
                     {payouts.map((item, index) => (
                       <tr
                         onClick={() =>
-                          history.push("/admin/editPayouts", {
+                          history.push("/admin/edit-payout", {
                             id: item._id,
                           })
                         }

@@ -2,18 +2,48 @@ import React, { useState, useEffect } from "react"
 import { Card, Container, Row, Col, Table } from "react-bootstrap"
 import { useHistory, withRouter } from "react-router-dom"
 import axiosInstance from "api/axios"
-import { ADMINCREATEUSER, GETARTISTS } from "api/Endpoints"
+import {
+  GETARTISTS,
+  GETALLPLACEMENT,
+  GETALLPAYOUTS,
+  GETALLPROJECTS,
+} from "api/Endpoints"
+
 function Dashboard() {
   const history = useHistory()
   const [users, setUsers] = useState([])
+  const [placementsCount, setPlacementCount] = useState(0)
+  const [artistsCount, setArtistsCount] = useState(0)
+  const [payoutsCount, setPayoutsCount] = useState(0)
+  const [songsCount, setSongsCount] = useState(0)
 
   useEffect(() => {
-    const url = GETARTISTS
     axiosInstance
-      .get(url)
-      .then((res) => setUsers(res.data.artistNames))
-      .catch((error) => console.log("error ", error))
-  }, [])
+      .get(GETARTISTS)
+      .then((res) => {
+        setUsers(res.data.artistNames)
+        setArtistsCount(res.data.artistNames.length)
+      })
+      .catch((error) => console.log(error))
+  }, [artistsCount, users])
+  useEffect(() => {
+    axiosInstance
+      .get(GETALLPLACEMENT)
+      .then((res) => setPlacementCount(res.data.data.placements.length))
+      .catch((error) => console.log(error))
+  }, [placementsCount])
+  useEffect(() => {
+    axiosInstance
+      .get(GETALLPAYOUTS)
+      .then((res) => setPayoutsCount(res.data.data.payouts.length))
+      .catch((error) => console.log(error))
+  }, [payoutsCount])
+  useEffect(() => {
+    axiosInstance
+      .get(GETALLPROJECTS)
+      .then((res) => setSongsCount(res.data.data.projects.length))
+      .catch((error) => console.log(error))
+  }, [songsCount])
   return (
     <>
       <Container fluid>
@@ -30,7 +60,7 @@ function Dashboard() {
                   <Col xs="7">
                     <div className="numbers">
                       <p className="card-category">Placements</p>
-                      <Card.Title as="h4">150</Card.Title>
+                      <Card.Title as="h4">{placementsCount}</Card.Title>
                     </div>
                   </Col>
                 </Row>
@@ -60,7 +90,7 @@ function Dashboard() {
                   <Col xs="7">
                     <div className="numbers">
                       <p className="card-category">Artists</p>
-                      <Card.Title as="h4">1,345</Card.Title>
+                      <Card.Title as="h4">{artistsCount}</Card.Title>
                     </div>
                   </Col>
                 </Row>
@@ -90,7 +120,7 @@ function Dashboard() {
                   <Col xs="7">
                     <div className="numbers">
                       <p className="card-category">Payouts</p>
-                      <Card.Title as="h4">23</Card.Title>
+                      <Card.Title as="h4">{payoutsCount}</Card.Title>
                     </div>
                   </Col>
                 </Row>
@@ -120,7 +150,7 @@ function Dashboard() {
                   <Col xs="7">
                     <div className="numbers">
                       <p className="card-category">Songs</p>
-                      <Card.Title as="h4">45</Card.Title>
+                      <Card.Title as="h4">{songsCount}</Card.Title>
                     </div>
                   </Col>
                 </Row>
@@ -169,7 +199,9 @@ function Dashboard() {
                         <td>
                           <i
                             onClick={() =>
-                              history.push("/admin/placement", { id: item._id })
+                              history.push("/admin/add-placement", {
+                                id: item._id,
+                              })
                             }
                             style={{
                               fontSize: 25,
@@ -182,7 +214,9 @@ function Dashboard() {
                         <td>
                           <i
                             onClick={() =>
-                              history.push("/admin/payout", { id: item._id })
+                              history.push("/admin/add-payout", {
+                                id: item._id,
+                              })
                             }
                             style={{
                               fontSize: 25,
@@ -195,7 +229,9 @@ function Dashboard() {
                         <td>
                           <i
                             onClick={() =>
-                              history.push("/admin/project", { id: item._id })
+                              history.push("/admin/add-song", {
+                                id: item._id,
+                              })
                             }
                             style={{
                               fontSize: 25,

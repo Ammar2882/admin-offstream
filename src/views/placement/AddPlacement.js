@@ -94,7 +94,6 @@ function AddPlacement() {
     axiosInstance
       .post(url, newData)
       .then((res) => {
-        console.log("res.data.data", res.data)
         history.push("/dashboard")
         alert("placement added successfully")
       })
