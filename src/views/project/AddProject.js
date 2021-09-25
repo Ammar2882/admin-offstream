@@ -1,47 +1,50 @@
-import React, { useState, useEffect } from "react"
-import { useLocation, useHistory } from "react-router-dom"
-import { Button, Card, Form, Container, Row, Col } from "react-bootstrap"
-import Select from "react-select"
-import DatePicker from "react-datepicker"
-import axiosInstance from "api/axios"
-import { ADDPROJECT, GETARTISTS } from "api/Endpoints"
-import "react-datepicker/dist/react-datepicker.css"
+import React, { useState, useEffect } from "react";
+import { useLocation, useHistory } from "react-router-dom";
+import { Button, Card, Form, Container, Row, Col } from "react-bootstrap";
+import ProfileAvatar from "../../assets/img/default-avatar.png";
+import Select from "react-select";
+import DatePicker from "react-datepicker";
+import axiosInstance from "api/axios";
+import { ADDPROJECT, GETARTISTS } from "api/Endpoints";
+import "react-datepicker/dist/react-datepicker.css";
+import { storage, ref, uploadBytes, getDownloadURL } from "../../api/firebase";
 
 function AddProject() {
-  const history = useHistory()
-  const { state } = useLocation()
-  const [songTitle, setSongTitle] = useState()
-  const [albumTitle, setAlbumTitle] = useState()
-  const [PRO, setPRO] = useState()
-  const [revShare, setRevShare] = useState()
-  const [percentSplits, setPercentSplits] = useState()
-  const [writingOwners, setWritingOwners] = useState(null)
-  const [artistName, setArtistsNames] = useState(null)
-  const [selectedOwnersWriting, setSelectedOwnersWriting] = useState(null)
-  const [selectedArtistNames, setSelectedArtistNames] = useState(null)
-
-  const [releaseDate, setReleaseDate] = useState(new Date())
-  const [options, setOption] = useState([])
+  const history = useHistory();
+  const { state } = useLocation();
+  const [songTitle, setSongTitle] = useState();
+  const [albumTitle, setAlbumTitle] = useState();
+  const [PRO, setPRO] = useState();
+  const [revShare, setRevShare] = useState();
+  const [percentSplits, setPercentSplits] = useState();
+  const [writingOwners, setWritingOwners] = useState(null);
+  const [artistName, setArtistsNames] = useState(null);
+  const [selectedOwnersWriting, setSelectedOwnersWriting] = useState(null);
+  const [selectedArtistNames, setSelectedArtistNames] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [imageName, setImageName] = useState();
+  const [releaseDate, setReleaseDate] = useState(new Date());
+  const [options, setOption] = useState([]);
 
   const handleWritingOwnersChange = (writingOwner) => {
-    setSelectedOwnersWriting(null)
-    const temp = []
-    writingOwner.map((e) => temp.push(e.value))
-    setSelectedOwnersWriting(temp)
-    setWritingOwners(writingOwner)
-  }
+    setSelectedOwnersWriting(null);
+    const temp = [];
+    writingOwner.map((e) => temp.push(e.value));
+    setSelectedOwnersWriting(temp);
+    setWritingOwners(writingOwner);
+  };
 
   const handleArtistsChange = (artist) => {
-    setSelectedArtistNames(null)
-    const temp = []
+    setSelectedArtistNames(null);
+    const temp = [];
     artist.map((e) => {
-      temp.push(e.value)
-    })
-    setSelectedArtistNames(temp)
-    setArtistsNames(artist)
-  }
+      temp.push(e.value);
+    });
+    setSelectedArtistNames(temp);
+    setArtistsNames(artist);
+  };
   useEffect(() => {
-    const url = GETARTISTS
+    const url = GETARTISTS;
     axiosInstance
       .get(url)
       .then((res) => {
@@ -49,13 +52,13 @@ function AddProject() {
           setOption((result) => [
             ...result,
             { value: e.artistName, label: e.artistName },
-          ])
-        })
+          ]);
+        });
       })
       .catch((error) => {
-        console.log("error ", error)
-      })
-  }, [])
+        console.log("error ", error);
+      });
+  }, []);
   const onSavePress = () => {
     if (
       songTitle === "" ||
@@ -67,35 +70,41 @@ function AddProject() {
       selectedOwnersWriting === null ||
       selectedArtistNames === null
     ) {
-      alert("Fields Cannot be empty")
-      return
+      alert("Fields Cannot be empty");
+      return;
     }
     if (!state?.id) {
-      alert("Something went Wrong, Please Refresh")
-      return
-    }
-    const newData = {
-      userId: state?.id,
-      songTitle,
-      albumTitle,
-      releaseDate,
-      PRO,
-      percentSplits,
-      revShare,
-      writingOwners: selectedOwnersWriting,
-      artistName: selectedArtistNames,
+      alert("Something went Wrong, Please Refresh");
+      return;
     }
 
-    const url = ADDPROJECT
-    axiosInstance
-      .post(url, newData)
-      .then((res) => {
-        console.log("res.data.data", res.data)
-        history.push("/dashboard")
-        alert("Project Added Successfully")
+    const storageRef = ref(storage, `${imageName}`);
+    uploadBytes(storageRef, selectedImage)
+      .then((snapshot) => {
+        getDownloadURL(ref(storage, `${imageName}`)).then((urll) => {
+          const newData = {
+            userId: state?.id,
+            songTitle,
+            albumTitle,
+            releaseDate,
+            PRO,
+            percentSplits,
+            revShare,
+            writingOwners: selectedOwnersWriting,
+            artistName: selectedArtistNames,
+            songImage: urll,
+          };
+
+          const url = ADDPROJECT;
+          axiosInstance.post(url, newData).then((res) => {
+            console.log("res.data.data", res.data);
+            history.push("/dashboard");
+            alert("Project Added Successfully");
+          });
+        });
       })
-      .catch((error) => alrt("error ", error))
-  }
+      .catch((err) => console.log(err));
+  };
   return (
     <>
       <Container fluid>
@@ -105,6 +114,42 @@ function AddProject() {
           </Card.Header>
           <Card.Body>
             <Form>
+              <Row className="d-flex">
+                {selectedImage ? (
+                  <div>
+                    <img
+                      alt="not fount"
+                      width={"150px"}
+                      height={"150px"}
+                      style={{ borderRadius: "150px" }}
+                      src={URL.createObjectURL(selectedImage)}
+                    />
+                    <br />
+                    <button onClick={() => setSelectedImage(null)}>
+                      Remove
+                    </button>
+                  </div>
+                ) : (
+                  <div>
+                    <img
+                      alt="Profile Image"
+                      width={"150px"}
+                      height={"150px"}
+                      src={ProfileAvatar}
+                    />
+                    <br />
+                    <input
+                      type="file"
+                      name="myImage"
+                      onChange={(event) => {
+                        console.log(event.target.files[0]);
+                        setSelectedImage(event.target.files[0]);
+                        setImageName(event.target.files[0].lastModified);
+                      }}
+                    />
+                  </div>
+                )}
+              </Row>
               <Row>
                 <Col className="pl-1" md="4">
                   <Form.Group>
@@ -206,7 +251,7 @@ function AddProject() {
         </Card>
       </Container>
     </>
-  )
+  );
 }
 
-export default AddProject
+export default AddProject;
